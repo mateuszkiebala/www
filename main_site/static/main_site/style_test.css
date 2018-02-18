@@ -1,0 +1,63 @@
+.rTable {
+    display: table;
+    width: 100%;
+}
+
+.rTableRow {
+    display: table-row;
+    background-color: lightgoldenrodyellow;
+}
+
+.rTableHeading {
+    display: table-header-group;
+    background-color: #dddddd;
+    width: 100%;
+}
+
+.rTableHead, .votesNumberHeader, .votesPercentageHeader {
+    background-color: #ccaeaf;
+    font-weight: bold;
+}
+
+.rTableCell, .votesPercentageCell, .votesNumberCell {
+    background-color: #EAE8E0;
+}
+
+.votesNumberHeader, .votesNumberCell {
+    width: 65%;
+}
+
+.votesPercentageHeader, .votesPercentageCell {
+    width: 45%;
+}
+
+.rTableHead, .votesNumberHeader, .votesPercentageHeader,
+.rTableCell, .votesPercentageCell, .votesNumberCell {
+    display: table-cell;
+    text-align: center;
+    border-left: 1px solid #D3D2CD;
+    border-top: 1px solid #D3D2CD;
+    border-bottom: 1px solid #D3D2CD;
+    padding: 2px;
+    margin: 2px;
+    vertical-align: middle;
+    font-family: Tahoma,Verdana,Helvetica,sans-serif;
+    font-size: 11px;
+    color: #505050;
+    cursor: auto;
+}
+
+.bark1, .bark2 {
+    height: 90%;
+    vertical-align: middle;
+    float: left;
+}
+
+.bark1 {
+    background-color: #0260D4;
+    color: #0260D4;
+}
+.bark2 {
+    background-color: #d41d1a;
+    color: #d41d1a;
+}

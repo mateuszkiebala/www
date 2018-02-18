@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main_site/style.css' %}" />
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyniki wyborów</title>
+
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"></script>
+    <script type="text/javascript" src="static/main_site/cookie.js"></script>
+    <script type="text/javascript" src="static/main_site/localStorage.js"></script>
+
+    <!-- Dynamic data loading -->
+    <script type="text/javascript" src="static/main_site/province_table.js"></script>
+    <script type="text/javascript" src="static/main_site/commune_types_table.js"></script>
+    <script type="text/javascript" src="static/main_site/ranges_table.js"></script>
+    <script type="text/javascript" src="static/main_site/general_data.js"></script>
+    <script type="text/javascript" src="static/main_site/map.js"></script>
+
+    <!-- Modal window -->
+    <script type="text/javascript" src="static/main_site/modal.js"></script>
+
+    <!-- Map -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['geochart']});
+      google.charts.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['State', "{{candidates.0}}", "{{candidates.1}}"],
+          ['Brazil', 0, 0],
+          ['US', 100, 100],
+          ['PL-DS', localStorage.getItem("dolnośląskie_0"),  localStorage.getItem("dolnośląskie_1")],
+          ['PL-KP', localStorage.getItem("kujawsko_pomorskie_0"), localStorage.getItem("kujawsko_pomorskie_1")],
+          ['PL-LU', localStorage.getItem("lubelskie_0"), localStorage.getItem("lubelskie_1")],
+          ['PL-LB', localStorage.getItem("lubuskie_0"), localStorage.getItem("lubuskie_1")],
+          ['PL-LD', localStorage.getItem("lodzkie_0"), localStorage.getItem("lodzkie_1")],
+          ['PL-MA', localStorage.getItem("malopolskie_0"), localStorage.getItem("malopolskie_1")],
+          ['PL-MZ', localStorage.getItem("mazowieckie_0"), localStorage.getItem("mazowieckie_1")],
+          ['PL-OP', localStorage.getItem("opolskie_0"), localStorage.getItem("opolskie_1")],
+          ['PL-PK', localStorage.getItem("podkarpackie_0"), localStorage.getItem("podkarpackie_1")],
+          ['PL-PD', localStorage.getItem("podlaskie_0"), localStorage.getItem("podlaskie_1")],
+          ['PL-PM', localStorage.getItem("pomorskie_0"), localStorage.getItem("pomorskie_1")],
+          ['PL-SL', localStorage.getItem("slaskie_0"), localStorage.getItem("slaskie_1")],
+          ['PL-SK', localStorage.getItem("swietokrzyskie_0"), localStorage.getItem("swietokrzyskie_1")],
+          ['PL-WN', localStorage.getItem("warminsko_mazurskie_0"), localStorage.getItem("warminsko_mazurskie_1")],
+          ['PL-WP', localStorage.getItem("wielkopolskie_0"), localStorage.getItem("wielkopolskie_1")],
+          ['PL-ZP', localStorage.getItem("zachodniopomorskie_0"), localStorage.getItem("zachodniopomorskie_1")]
+        ]);
+
+        var options = {
+            region: 'PL',
+            displayMode: 'regions',
+            resolution: 'provinces',
+            colorAxis: {colors: ['orange', 'orange', 'white', '#4374e0', '#4374e0']},
+            tooltip: {
+                isHtml: true,
+                showTitle: false
+            }
+        };
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+</head>
+
+<body>
+<div class="site_div">
+    <div class="topimages">
+        <div>
+            <img alt="" src="../../static/main_site/top_pl.png" class="topimg">
+            <img alt="" src="../../static/main_site/flagi.png" class="flag">
+        </div>
+    </div>
+    <img alt="" src="../../static/main_site/main_pl.jpg" class="mainimg">
+<div>
+
+</div>
+    <ul id="navigation_list" style="list-style-type: none">
+        <li>Akty Prawne</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Dokumenty</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Organy wyborcze</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Kandydaci</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Frekwencja</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Wyniki</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Pierwsze głosowanie</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">SEJM</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">SENAT</li>
+        <li>
+            <img alt="" src="../../static/main_site/menusep.png" class="msep">
+            {% if user.is_authenticated %}
+                <a id="login_link" href="../logout/">Wyloguj</a>
+                <li id="username"> {{ username }} </li>
+            {% endif %}
+
+            {% if not user.is_authenticated %}
+                <a id="login_link" href="../login/">Zaloguj się</a>
+            {% endif %}
+        </li>
+    </ul>
+
+
+    <div class="mapinfo">
+        <div class="map">
+            <table width="445" border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="10" rowspan="2" class="tabhdr">Porównanie wyników głosowania na kandydatów</td>
+                    </tr>
+                    <tr>
+                        <td class="borderl">.</td>
+                        <td class="borderr">.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="14" class="hborderltbr_l">Polska</td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" class="maplt">
+                            <div id="regions_div">
+                                <area href="javascript:enlarge(&#39;0G.htm&#39;)" alt="" title="Mapa Polski" shape="rect" coords="0,0,320,278">
+                            </div>
+                        </td>
+                        <td colspan="5" class="mapltr">
+                            <table class="maptable" border="0" cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3" class="righthdr">Polska</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="rightdark">Statystyka</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rightlight" width="100">Liczba mieszkańców:</td>
+                                        <td class="rightlight_b" width="40"><span id="inhabitants"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rightlight">Powierzchnia:</td>
+                                        <td class="rightlight_b">312685 km2</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rightlight">Zaludnienie:</td>
+                                        <td class="rightlight_b"><span id="population"> os/km2</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="rightdark">Zbiorcze wyniki głosowania</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rightlight">Liczba uprawnionych:</td>
+                                        <td class="rightlight_b"><span id="entitled_inhabitants"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rightlight">Liczba wydanych kart:</td>
+                                        <td class="rightlight_b"><span id="distributed_ballots"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rightlight">Liczba głosów oddanych:</td>
+                                        <td class="rightlight_b"><span id="votes"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rightlight">Liczba głosów ważnych:</td>
+                                        <td class="rightlight_b"><span id="valid_votes"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><br>
+        </div>
+    </div>
+    <div class="mapinfo">
+        <div class="acvtw403">
+            <div class="tabtxth">Zobacz także:</div>
+            <div class="tabtxtl">Frekwencja</div>
+            <div class="tabtxtl">Wyniki głosowania zagranicą</div>
+            <div class="tabtxtl">Porównanie wyników głosowania na kandydatów w zależności od siedziby komisji obwodowej</div>
+            <div style="padding-top: 10px; background: #dbdcde;"></div>
+            <div class="tabtxth">Szczegółowe wyniki głosowania na kandydatów:</div>
+            <div class="tabtxtl">{{ candidates.0 }}</div>
+            <div class="tabtxtl">{{ candidates.1 }}</div>
+        </div>
+        <div class="acvtw403" style="vertical-align:bottom">
+            <table class="tabbb" border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="3" class="righthdr"
+                            style="background-color:#e7e7de;
+                                   border-top: solid 1px #d3d2cd;
+                                   border-left: solid 1px #d3d2cd;
+                                   border-right: solid 1px #d3d2cd;
+                                   height:25px;">{{ candidates.0 }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rightlight" style="border-top-width:0px; border-left: solid 1px #d3d2cd">
+                            <div class="mapbar"><img alt="" src="../../static/main_site/empty.png" class="bark1" id="cand0_bark"></div>
+                        </td>
+                        <td class="righthdr" style="background-color:#e7e7de;height:25px;text-align:left"><span id="cand0_per"></span></td>
+                        <td class="righthdr" style="background-color:#e7e7de;height:25px;text-align:right; border-right: solid 1px #d3d2cd;"; ><span id="cand0_votes"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="righthdr"
+                            style="background-color:#e7e7de;
+                                   border-left: solid 1px #d3d2cd;
+                                   border-right: solid 1px #d3d2cd;
+                                   vertical-align:bottom;">{{ candidates.1 }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rightlight" style="border-top-width:0px; border-left: solid 1px #d3d2cd">
+                            <div class="mapbar"><img alt="" src="../../static/main_site/empty.png" class="bark2" id="cand1_bark"></div>
+                        </td>
+                        <td class="righthdr" style="background-color:#e7e7de;height:25px;text-align:left"><span id="cand1_per"></span></td>
+                        <td class="righthdr" style="background-color:#e7e7de;height:25px;text-align:right; border-right: solid 1px #d3d2cd;"><span id="cand1_votes"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <table id="resultstable">
+        <tbody>
+            <tr>
+                <td colspan="2" class="alvt">
+                    <table class="tabbb" id="s0" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <button id="refresh_button" onclick="refresh()" style="font-size: 13px">Odśwież</button>
+                            </tr>
+                            <tr>
+                                <td class="tabhdr_lt_b">.</td>
+                                <td rowspan="2" class="tabhdr_lt">.</td>
+                                <td colspan="8" rowspan="2" class="tabhdr"><a name="WYN">Porównanie wyników głosowania na kandydatów</a></td>
+                                <td rowspan="2" class="tabhdr_lt">.</td>
+                                <td class="tabhdr_lt_br">.</td>
+                            </tr>
+                            <tr>
+                                <td class="borderl">.</td>
+                                <td class="borderr">.</td>
+                            </tr>
+                            <tr>
+                                <td class="hroww9">.</td>
+                                <td class="hroww12">.</td>
+                                <td class="hroww25">.</td>
+                                <td class="hroww180">.</td>
+                                <td class="hroww90">.</td>
+                                <td class="hroww90">.</td>
+                                <td class="hroww65">.</td>
+                                <td class="hroww320">.</td>
+                                <td class="hroww65">.</td>
+                                <td class="hroww70">.</td>
+                                <td class="hroww12">.</td>
+                                <td class="hroww9">.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" rowspan="3" class="hborderltbch">Nr</td>
+                                <td rowspan="3" class="hborderltbch">Nazwa</td>
+                                <td rowspan="3" class="hborderltbch">Liczba głosów<br>ważnych</td>
+                                <td colspan="2" class="hborderlt">{{ candidates.0 }}</td>
+                                <td rowspan="3" class="hborderltbch">Liczba głosów:<br>na kandydata / ważnych<br>[%]</td>
+                                <td colspan="4" class="hborderltr">{{ candidates.1 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="hborderlt">głosów na kandydata</td>
+                                <td colspan="4" class="hborderltr">głosów na kandydata</td>
+                            </tr>
+                            <tr>
+                                <td class="hborderltbch" onclick="s('s0',3,'n')">liczba</td>
+                                <td class="hborderltbch" onclick="s('s0',4,'n')">%</td>
+                                <td class="hborderltbch" onclick="s('s0',6,'n')">%</td>
+                                <td colspan="3" class="hborderltbrch" onclick="s('s0',7,'n')">liczba</td>
+                            </tr>
+                        </tbody>
+                        <tbody class="voting_results">
+                            {% for province in provinces %}
+                                <tr>
+                                    <td colspan="3" class="col5ar">{{ forloop.counter }}</td>
+                                    <td class="col5"><span id="pt_prov_name_{{ forloop.counter }}"></span></td>
+                                    <td class="col5ar"><span id="pt_valid_votes_{{ forloop.counter }}"></span></td>
+                                    <td class="col5ar"><span id="pt_cand0_votes_{{ forloop.counter }}"></span></td>
+                                    <td class="col5ar"><span id="pt_cand0_per_{{ forloop.counter }}"></span></td>
+                                    <td class="col5pb2">
+                                        <img alt="" src="../../static/main_site/empty.png" class="bark1" id="pt_bark0_{{ forloop.counter }}">
+                                        <img alt="" src="../../static/main_site/empty.png" class="bark2" id="pt_bark1_{{ forloop.counter }}"></td>
+                                    <td class="col5ar"><span id="pt_cand1_per_{{ forloop.counter }}"></span></td>
+                                    <td colspan="3" class="col6ar"><span id="pt_cand1_votes_{{ forloop.counter }}"></span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="alvt">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="alvt">
+                    <table class="tabbb" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td class="tabhdr_lt_b">.</td>
+                                <td rowspan="2" class="tabhdr_lt">.</td>
+                                <td colspan="8" rowspan="2" class="tabhdr"><a name="miasto">Porównanie wyników głosowania na kandydatów w zależności od siedziby komisji obwodowej</a></td>
+                                <td rowspan="2" class="tabhdr_lt">.</td>
+                                <td class="tabhdr_lt_br">.</td>
+                            </tr>
+                            <tr>
+                                <td class="borderl">.</td>
+                                <td class="borderr">.</td>
+                            </tr>
+                            <tr>
+                                <td class="hroww9">.</td>
+                                <td class="hroww12">.</td>
+                                <td class="hroww25">.</td>
+                                <td class="hroww180">.</td>
+                                <td class="hroww90">.</td>
+                                <td class="hroww90">.</td>
+                                <td class="hroww65">.</td>
+                                <td class="hroww320">.</td>
+                                <td class="hroww65">.</td>
+                                <td class="hroww70">.</td>
+                                <td class="hroww12">.</td>
+                                <td class="hroww9">.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" rowspan="3" class="hborderltb">Lp</td>
+                                <td rowspan="3" class="hborderltb">Podział</td>
+                                <td rowspan="3" class="hborderltb">Liczba głosów<br>ważnych</td>
+                                <td colspan="2" class="hborderlt">{{ candidates.0 }}</td>
+                                <td rowspan="3" class="hborderltb">Liczba głosów:<br>na kandydata / ważnych<br>[%]</td>
+                                <td colspan="4" class="hborderltr">{{ candidates.1 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="hborderlt">głosów na kandydata</td>
+                                <td colspan="4" class="hborderltr">głosów na kandydata</td>
+                            </tr>
+                            <tr>
+                                <td class="hborderltb">liczba</td>
+                                <td class="hborderltb">%</td>
+                                <td class="hborderltb">%</td>
+                                <td colspan="3" class="hborderltbr">liczba</td>
+                            </tr>
+                                <tbody class="voting_results">
+                                    {% for type in commune_types %}
+                                    <tr>
+                                        <td colspan="3" class="col5ar">{{ forloop.counter }}</td>
+                                        <td class="col5"><span id="ctt_type_name_{{ forloop.counter }}"></span></td>
+                                        <td class="col5ar"><span id="ctt_valid_votes_{{ forloop.counter }}"></span></td>
+                                        <td class="col5ar"><span id="ctt_cand0_votes_{{ forloop.counter }}"></span></td>
+                                        <td class="col5ar"><span id="ctt_cand0_per_{{ forloop.counter }}"></span></td>
+                                        <td class="col5pb2">
+                                            <img alt="" src="../../static/main_site/empty.png" class="bark1" id="ctt_bark0_{{ forloop.counter }}">
+                                            <img alt="" src="../../static/main_site/empty.png" class="bark2" id="ctt_bark1_{{ forloop.counter }}"></td>
+                                        <td class="col5ar"><span id="ctt_cand1_per_{{ forloop.counter }}"></span></td>
+                                        <td colspan="3" class="col6ar"><span id="ctt_cand1_votes_{{ forloop.counter }}"></span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            <tr>
+                                <td colspan="2" class="borderlt">.</td>
+                                <td colspan="7" class="tabhdr_22">Porównanie wyników głosowania na kandydatów w zależności od liczby mieszkańców gminy</td>
+                                <td colspan="3" class="borderrt">&nbsp;</td>
+                            </tr>
+                                <tbody class="voting_results">
+                                    {% for range in inhabitants_ranges %}
+                                        <tr>
+                                            <td colspan="3" class="col5ar">{{ forloop.counter }}</td>
+                                            <td class="col5"><span id="rt_range_name_{{ forloop.counter }}"></span></td>
+                                            <td class="col5ar"><span id="rt_valid_votes_{{ forloop.counter }}"></span></td>
+                                            <td class="col5ar"><span id="rt_cand0_votes_{{ forloop.counter }}"></span></td>
+                                            <td class="col5ar"><span id="rt_cand0_per_{{ forloop.counter }}"></span></td>
+                                            <td class="col5pb2">
+                                                <img alt="" src="../../static/main_site/empty.png" class="bark1" id="rt_bark0_{{ forloop.counter }}">
+                                                <img alt="" src="../../static/main_site/empty.png" class="bark2" id="rt_bark1_{{ forloop.counter }}">
+                                            </td>
+                                            <td class="col5ar"><span id="rt_cand1_per_{{ forloop.counter }}"></span></td>
+                                            <td colspan="3" class="col6ar"><span id="rt_cand1_votes_{{ forloop.counter }}"></span></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" data-dismiss="modal">×</span>
+          <h2 id="modal_title"></h2>
+        </div>
+        <div class="modal-body">
+            <table id="modal_table" class="display" width="100%" cellspacing="0">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+          <h3> </h3>
+        </div>
+      </div>
+
+    </div>
+
+    <ul id="navigation_list" style="list-style-type: none">
+        <li>Akty Prawne</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Dokumenty</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Organy wyborcze</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Kandydaci</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Frekwencja</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Wyniki</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Pierwsze głosowanie</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">SEJM</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">SENAT</li>
+        <li><img alt="" src="../../static/main_site/menusep.png" class="msep">Wykonawca</li>
+    </ul>
+
+    <script>
+        function refresh() {
+            getMapData();
+            generalInfoHandler();
+            provinceTableHandler();
+            communeTypeTableHandler();
+            rangesTableHandler();
+        }
+    </script>
+</div>
+</body>
+
+
+</html>

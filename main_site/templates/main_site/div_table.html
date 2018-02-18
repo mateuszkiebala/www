@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main_site/style.css' %}" />
+    <meta charset="UTF-8">
+    <title>Main_site</title>
+</head>
+
+<body>
+<div class="rTable">
+    <div class="rTableRow">
+        <div class="rTableCell">Porównanie wyników głosowania na kandydatów</div>
+    </div>
+    <div class="rTableRow">
+        <div class="rTable">
+            <div class="rTableHeading">
+                <div class="rTableHead">Nr</div>
+                <div class="rTableHead">Nazwa</div>
+                <div class="rTableHead">Liczba głosów ważnych</div>
+                <div class="rTable">
+                    <div class="rTableRow">
+                        <div class="rTableHead">{{ candidates.0 }}</div>
+                    </div>
+                    <div class="rTableRow">
+                        <div class="rTableHead">głosów na kandydata</div>
+                    </div>
+                    <div class="rTable">
+                        <div class="votesNumberHeader">liczba</div>
+                        <div class="votesPercentageHeader">%</div>
+                    </div>
+                </div>
+                <div class="rTableHead">Liczba głosów:<br>na kandydata / ważnych<br>[%]</div>
+                <div class="rTable">
+                    <div class="rTableRow">
+                        <div class="rTableHead">{{ candidates.1 }}</div>
+                    </div>
+                    <div class="rTableRow">
+                        <div class="rTableHead">głosów na kandydata</div>
+                    </div>
+                    <div class="rTable">
+                        <div class="votesPercentageHeader">%</div>
+                        <div class="votesNumberHeader">liczba</div>
+                    </div>
+                </div>
+
+            </div>
+            {% for province in provinces %}
+                <div class="rTableRow">
+                    <div class="rTableCell">{{ forloop.counter }}</div>
+                    <div class="rTableCell">{{ province.name }}</div>
+                    <div class="rTableCell">{{ province.get_valid_votes }}</div>
+                    <div class="rTable">
+                        <div class="votesNumberCell">{{ province.get_votes_of_candidates.0 }}</div>
+                        <div class="votesPercentageCell">{{ province.get_percentages.0 }}</div>
+                    </div>
+                    <div class="rTableCell">
+                        <img class="bark1" width="{{ province.get_percentages.0 }}%" src="{% static 'main_site/empty.png' %}" alt="">
+                        <img class="bark2" width="{{ province.get_percentages.1 }}%" src="{% static 'main_site/empty.png' %}" alt="">
+                    </div>
+                    <div class="rTable">
+                        <div class="votesPercentageCell">{{ province.get_percentages.1 }}</div>
+                        <div class="votesNumberCell">{{ province.get_votes_of_candidates.1 }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="rTableRow">
+        <div class="rTableCell">Porównanie wyników głosowania na kandydatów w zależności od siedziby komisji obwodowej</div>
+    </div>
+    <div class="rTableRow">
+        <div class="rTable">
+            <div class="rTableHeading">
+                <div class="rTableHead">Nr</div>
+                <div class="rTableHead">Podział</div>
+                <div class="rTableHead">Liczba głosów ważnych</div>
+                <div class="rTable">
+                    <div class="rTableRow">
+                        <div class="rTableHead">{{ candidates.0 }}</div>
+                    </div>
+                    <div class="rTableRow">
+                        <div class="rTableHead">głosów na kandydata</div>
+                    </div>
+                    <div class="rTable">
+                        <div class="votesNumberHeader">liczba</div>
+                        <div class="votesPercentageHeader">%</div>
+                    </div>
+                </div>
+                <div class="rTableHead">Liczba głosów:<br>na kandydata / ważnych<br>[%]</div>
+                <div class="rTable">
+                    <div class="rTableRow">
+                        <div class="rTableHead">{{ candidates.1 }}</div>
+                    </div>
+                    <div class="rTableRow">
+                        <div class="rTableHead">głosów na kandydata</div>
+                    </div>
+                    <div class="rTable">
+                        <div class="votesPercentageHeader">%</div>
+                        <div class="votesNumberHeader">liczba</div>
+                    </div>
+                </div>
+
+            </div>
+            {% for type in commune_types %}
+                <div class="rTableRow">
+                    <div class="rTableCell">{{ forloop.counter }}</div>
+                    <div class="rTableCell">{{ type.name }}</div>
+                    <div class="rTableCell">{{ type.get_valid_votes }}</div>
+                    <div class="rTable">
+                        <div class="votesNumberCell">{{ type.get_votes_of_candidates.0 }}</div>
+                        <div class="votesPercentageCell">{{ type.get_percentages.0 }}</div>
+                    </div>
+                    <div class="rTableCell">
+                        <img class="bark1" width="{{ type.get_percentages.0 }}%" src="{% static 'main_site/empty.png' %}" alt="">
+                        <img class="bark2" width="{{ type.get_percentages.1 }}%" src="{% static 'main_site/empty.png' %}" alt="">
+                    </div>
+                    <div class="rTable">
+                        <div class="votesPercentageCell">{{ type.get_percentages.1 }}</div>
+                        <div class="votesNumberCell">{{ type.get_votes_of_candidates.1 }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="rTableRow">
+        <div class="rTableCell">Porównanie wyników głosowania na kandydatów w zależności od liczby mieszkańców gminy</div>
+    </div>
+    <div class="rTableRow">
+        <div class="rTable">
+            <div class="rTableHeading">
+                <div class="rTableHead">Nr</div>
+                <div class="rTableHead">Podział</div>
+                <div class="rTableHead">Liczba głosów ważnych</div>
+                <div class="rTable">
+                    <div class="rTableRow">
+                        <div class="rTableHead">{{ candidates.0 }}</div>
+                    </div>
+                    <div class="rTableRow">
+                        <div class="rTableHead">głosów na kandydata</div>
+                    </div>
+                    <div class="rTable">
+                        <div class="votesNumberHeader">liczba</div>
+                        <div class="votesPercentageHeader">%</div>
+                    </div>
+                </div>
+                <div class="rTableHead">Liczba głosów:<br>na kandydata / ważnych<br>[%]</div>
+                <div class="rTable">
+                    <div class="rTableRow">
+                        <div class="rTableHead">{{ candidates.1 }}</div>
+                    </div>
+                    <div class="rTableRow">
+                        <div class="rTableHead">głosów na kandydata</div>
+                    </div>
+                    <div class="rTable">
+                        <div class="votesPercentageHeader">%</div>
+                        <div class="votesNumberHeader">liczba</div>
+                    </div>
+                </div>
+
+            </div>
+            {% for range in inhabitants_ranges %}
+                <div class="rTableRow">
+                    <div class="rTableCell">{{ forloop.counter }}</div>
+                    <div class="rTableCell">{{ range.name }}</div>
+                    <div class="rTableCell">{{ range.get_valid_votes }}</div>
+                    <div class="rTable">
+                        <div class="votesNumberCell">{{ range.get_votes_of_candidates.0 }}</div>
+                        <div class="votesPercentageCell">{{ range.get_percentages.0 }}</div>
+                    </div>
+                    <div class="rTableCell">
+                        <img class="bark1" width="{{ range.get_percentages.0 }}%" src="{% static 'main_site/empty.png' %}" alt="">
+                        <img class="bark2" width="{{ range.get_percentages.1 }}%" src="{% static 'main_site/empty.png' %}" alt="">
+                    </div>
+                    <div class="rTable">
+                        <div class="votesPercentageCell">{{ range.get_percentages.1 }}</div>
+                        <div class="votesNumberCell">{{ range.get_votes_of_candidates.1 }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
+</body>
+</html>
